@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ćwiczenia jQuery – rodzina DOM</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        .container {
+            border: 2px solid #333;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nested {
+            border: 1px dashed #666;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .highlight {
+            background: yellow;
+        }
+
+        .active {
+            background: lightgreen;
+            font-weight: bold;
+        }
+
+        ul li {
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>1. Zagnieżdżone elementy</h2>
+
+    <div class="container" id="mainDiv">
+        <p>Akapit pierwszy</p>
+        <p id="targetP">Akapit docelowy (p do ćwiczeń parent/parents)</p>
+
+        <div class="nested" id="nestedDiv">
+            <p>Tekst w zagnieżdżonym divie</p>
+            <span>Span nr 1</span>
+            <span>Span nr 2</span>
+        </div>
+
+        <ul id="listExample">
+            <li>Element 1</li>
+            <li>Element 2
+                <ul>
+                    <li>Element 2.1</li>
+                    <li>Element 2.2</li>
+                </ul>
+            </li>
+            <li>Element 3</li>
+        </ul>
+    </div>
+
+    <hr>
+
+    <h2>2. parent(), parents(), children()</h2>
+
+    <button id="parentBtn">Zmień tło rodzica wybranego p</button>
+    <button id="parentsBtn">Zaznacz wszystkich przodków</button>
+    <button id="childrenBtn">Podświetl dzieci div</button>
+
+    <hr>
+
+    <h2>3. siblings()</h2>
+    <p>Kliknij w element listy → podświetl jego rodzeństwo i ustaw active:</p>
+
+    <ul id="siblingsList">
+        <li>A</li>
+        <li>B</li>
+        <li>C</li>
+        <li>D</li>
+    </ul>
+
+    <hr>
+
+    <h2>4. find()</h2>
+
+    <button id="findSpan">Pokoloruj span na czerwono</button>
+    <button id="findLink">Dodaj target="_blank" do linków</button>
+
+    <div id="findDiv" class="nested">
+        <p>Tekst <span>Span w find()</span></p>
+        <a href="https://google.com">Google</a><br>
+        <a href="https://wikipedia.pl">Wikipedia</a>
+    </div>
+
+    <hr>
+
+    <h2>5. Prosta nawigacja po drzewie DOM</h2>
+
+    <button id="showParents">Pokaż przodków targetP</button>
+    <button id="showChildren">Pokaż dzieci nestedDiv</button>
+
+    <div class="result" id="navResult"></div>
+
+    <script>
+        $("#parentBtn").click(function () {
+            $("#targetP").parent().toggleClass("highlight");
+        });
+
+        $("#parentsBtn").click(function () {
+            $("#targetP").parents().toggleClass("highlight");
+        });
+
+        $("#childrenBtn").click(function () {
+            $("#nestedDiv").children().toggleClass("highlight");
+        });
+
+        $("#siblingsList li").click(function () {
+            $("#siblingsList li").removeClass("active");
+
+            $(this).addClass("active");
+
+            $("#siblingsList li").removeClass("highlight");
+            $(this).siblings().addClass("highlight");
+        });
+
+        $("#findSpan").click(function () {
+            $("#findDiv").find("span").css("color", "red");
+        });
+
+        $("#findLink").click(function () {
+            $("#findDiv").find("a").attr("target", "_blank");
+        });
+
+        $("#showParents").click(function () {
+            let parents = $("#targetP").parents().map(function () {
+                return this.tagName.toLowerCase();
+            }).get().join(" → ");
+
+            $("#navResult").text("Przodkowie: " + parents);
+        });
+
+        $("#showChildren").click(function () {
+            let children = $("#nestedDiv").children().map(function () {
+                return this.tagName.toLowerCase();
+            }).get().join(", ");
+
+            $("#navResult").text("Dzieci nestedDiv: " + children);
+        });
+    </script>
+
+</body>
+
+</html>
